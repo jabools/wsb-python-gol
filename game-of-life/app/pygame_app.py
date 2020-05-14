@@ -20,6 +20,7 @@ class PygameApp(AppBase):
         init()
 
         self.__surface = display.set_mode(self.__screen_size)
+        display.set_caption('Game of Life --- SPACE - Toggle evolution, R - reset generation')
 
         model = Population(PygameCellFactory(), self.__screen_size)
         self.__board_view = PygameBoard('Population', model, self.__surface)
