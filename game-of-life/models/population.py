@@ -1,15 +1,16 @@
 from .model_base import ModelBase
-from random import randrange, choice
+from random import randrange
 from factories.cell_factory import CellFactory
 
 
 class Population(ModelBase):
-    def __init__(self, cell_factory: CellFactory):
+    def __init__(self, cell_factory: CellFactory, size):
         super().__init__()
-        self.__cells = [[]]
         self.__evolve = True
-        self.__size = (0, 0)
+        self.__size = size
         self.__cell_factory = cell_factory
+        self.__cells = self.__init_cells()
+        self.reset_population()
 
     def modify(self, *args, **kwargs):
         for obs in self._observers.values():
@@ -18,22 +19,26 @@ class Population(ModelBase):
         if self.__evolve:
             self.__next_generation()
 
+        [[self.__cells[x][y].notify() for y in range(round(self.__size[1] / 10))]
+         for x in range(round(self.__size[0] / 10))]
+
     def notify(self):
         pass
 
     def reset_population(self):
-        self.__cells = [[self.__cell_factory.create(x, y) for y in range(round(self.__size[1] / 100))] for x in range(round(self.__size[0] / 100))]
+        [[self.__cells[x][y].modify(False) for y in range(round(self.__size[1] / 10))]
+         for x in range(round(self.__size[0] / 10))]
 
-        # generate random 15 to 30 cells
-        for x in range(3, 5):
-            print(len(self.__cells))
-            self.__cells[randrange(0, round(self.__size[0] / 100) - 1)][randrange(0, round(self.__size[1] / 100) - 1)].modify(True)
+        for x in range(100, 200):
+            self.__cells[randrange(0, round(self.__size[0] / 10))][
+                randrange(0, round(self.__size[1] / 10))].modify(True)
 
     def __next_generation(self):
-        self.reset_population()
+        pass
 
     def toggle_evolution(self):
         self.__evolve = not self.__evolve
 
-    def set_size(self, size):
-        self.__size = size
+    def __init_cells(self):
+        return [[self.__cell_factory.create(x, y) for y in range(round(self.__size[1] / 10))]
+                for x in range(round(self.__size[0] / 10))]
