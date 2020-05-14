@@ -9,6 +9,7 @@ class Cell(ModelBase):
         self.__y = y
 
     def modify(self, *args, **kwargs):
+        self.__alive = bool(args[0])
         self.notify()
 
     def notify(self):

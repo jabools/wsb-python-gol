@@ -7,7 +7,7 @@ from pygame.locals import Rect
 class PygameCell(ViewBase):
     def __init__(self, name: str, model: Cell, surface):
         super().__init__(name, model, surface)
-        self.__rect = Rect(model.x, model.y, model.x + 10, model.y + 10)
+        self.__rect = Rect(model.x * 100 + 1, model.y * 100 + 1, model.x * 100 + 98, model.y * 100 + 98)
 
     def add_component(self, comp):
         pass

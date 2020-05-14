@@ -2,13 +2,14 @@ from .app_base import AppBase
 from pygame import init, display, draw, time, event, QUIT, quit, K_SPACE
 from views.pygame_board import PygameBoard
 from models.population import Population
+from factories.pygame_cell_factory import PygameCellFactory
 
 
 class PygameApp(AppBase):
     def __init__(self, controller):
         super().__init__(controller)
         self.__screen_color = (255, 255, 255)
-        self.__screen_size = (640, 480)
+        self.__screen_size = (500, 500)
         self.__pyg_clock = time.Clock()
         self.__surface = None
 
@@ -20,7 +21,7 @@ class PygameApp(AppBase):
 
         self.__surface = display.set_mode(self.__screen_size)
 
-        model = Population()
+        model = Population(PygameCellFactory())
         model.set_size(self.__screen_size)
         self.__board_view = PygameBoard('Population', model, self.__surface)
         model.add_observer(self.__board_view)
@@ -41,5 +42,5 @@ class PygameApp(AppBase):
 
             self.controller.handle()
 
-            self.__pyg_clock.tick(40)
+            self.__pyg_clock.tick(2)
             display.flip()
